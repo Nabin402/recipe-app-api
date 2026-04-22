@@ -1,6 +1,5 @@
 version: '3.9'
 
-
 services:
   app:
     build:
@@ -15,3 +14,22 @@ services:
 
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:13-alpine    # Fixed: postgres (no extra 's') and alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=dev_db       # Fixed: space after dash
+      - POSTGRES_USER=devuser    # Fixed: space after dash
+      - POSTGRES_PASSWORD=changeme  # Fixed: space after dash
+
+volumes:
+  dev-db-data:
